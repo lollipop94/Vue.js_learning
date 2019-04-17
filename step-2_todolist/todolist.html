@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TodoList</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <div id="app">
+        <h2>{{title}}</h2>
+        <div>
+            <h4>待办事项：</h4>
+            <input type="text" v-model="todo" placeholder="请输入你打算做的事" />
+            <button type="button" v-on:click="addItem">添加</button>
+            <div>
+                <h4>待办事项列表：</h4>
+                <ul v-if="items.length">
+                    <li v-for="(item, index) in items" :key="index">
+                        {{item.text}}
+                        <button type="button" v-on:click="deleteItem(item)">删除</button>
+                    </li>
+                </ul>
+                <div v-else>暂无没有要完成的事。</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var app = new Vue({
+            el: '#app',
+            data: {
+                title: 'TodoList',
+                todo: '',
+                items: [
+                    // {text: '吃饭'},
+                    // {text: '睡觉'},
+                    // {text: '打豆豆'}
+                ]
+            },
+            methods: {
+                addItem: function() {
+                    console.log('add item:', this.todo)
+                    this.items.push({
+                        text: this.todo
+                    })
+                },
+                deleteItem: function(item) {
+                    console.log('delete item:', item.text)
+                    var index = this.items.indexOf(item)
+                    this.items.splice(index, 1)
+                }
+            }
+        })
+    </script>
+</body>
+</html>
