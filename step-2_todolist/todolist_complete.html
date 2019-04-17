@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TodoList</title>
+    <style>
+        .active {
+            color: #0986ec;
+        }
+        .del {
+            text-decoration:line-through;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <div id="app">
+        <h2>{{title}}</h2>
+        <div>
+            <h4>待办事项：</h4>
+            <input type="text" v-model="todo" placeholder="请输入你打算做的事" />
+            <button type="button" v-on:click="addItem">添加</button>
+            <div>
+                <h4>待办事项列表：</h4>
+                <div v-if="items.length">
+                    <div>
+                        <a type="button" v-bind:class="{active: visibility == 'all'}" v-on:click="showAll">所有</a>
+                        <a type="button" v-bind:class="{active: visibility == 'completed'}" v-on:click="showComplete">已完成</a>
+                        <a type="button" v-bind:class="{active: visibility == 'unCompleted'}" v-on:click="showUncomplete">未完成</a>
+                    </div>
+                    <ul>
+                        <li v-for="(item, index) in filterList" :key="index" v-bind:class="{del: item.isComplete}">
+                            {{item.text}}
+                            <button type="button" v-on:click="deleteItem(item)" v-if="!item.isComplete">删除</button>
+                        </li>
+                    </ul>
+                </div>
+                <div v-else>暂无没有要完成的事。</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var app = new Vue({
+            el: '#app',
+            data: {
+                title: 'TodoList',
+                todo: '',
+                items: [
+                    // { text: '吃饭', isComplete: false },
+                    // { text: '睡觉', isComplete: false },
+                    // { text: '打豆豆', isComplete: true }
+                ],
+                visibility: 'all'
+            },
+            computed: {
+                // 筛选的三种状态：所有/已完成/未完成
+                filterList: function () {
+                    var filter = {
+                        all: function(items) {
+                            return items
+                        },
+                        completed: function(items) {
+                            return items.filter(function (item) {
+                                return item.isComplete
+                            })
+                        },
+                        unCompleted: function(items) {
+                            return items.filter(function (item) {
+                                return !item.isComplete
+                            })
+                        }
+                    }
+                    return filter[ this.visibility](this.items)
+                }
+            },
+            methods: {
+                // 添加事项
+                addItem: function() {
+                    console.log('add item:', this.todo)
+                    this.items.push({
+                        text: this.todo,
+                        isComplete: false
+                    })
+                    this.todo = ''
+                },
+                // 删除事项
+                deleteItem: function(item) {
+                    console.log('delete item:', item.text)
+                    var index = this.items.indexOf(item)
+                    // this.items.splice(index, 1)
+                    this.items[index].isComplete = true
+                },
+                // 显示所有
+                showAll: function () {
+                    this.visibility = 'all'
+                },
+                // 显示已完成
+                showComplete: function() {
+                    this.visibility = 'completed'
+                },
+                // 显示未完成
+                showUncomplete: function() {
+                    this.visibility = 'unCompleted'
+                }
+            }
+        })
+    </script>
+</body>
+</html>
