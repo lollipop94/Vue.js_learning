@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Filter</title>
+    <style>
+        .active {
+            color: #0986ec;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <div id="app">
+        <h2>筛选事项列表</h2>
+        <div>
+            <a type="button" v-bind:class="{active: visibility == 'all'}" v-on:click="showAll">所有</a>
+            <a type="button" v-bind:class="{active: visibility == 'completed'}" v-on:click="showComplete">已完成</a>
+            <a type="button" v-bind:class="{active: visibility == 'unCompleted'}" v-on:click="showUncomplete">未完成</a>
+        </div>
+        <ul>
+            <li v-for="(item, index) in filterList" :key="index">
+                {{item.text}}
+            </li>
+        </ul>
+    </div>
+
+    <script type="text/javascript">
+        var app = new Vue({
+            el: '#app',
+            data: {
+                items: [
+                    { text: '吃饭', isComplete: false },
+                    { text: '睡觉', isComplete: false },
+                    { text: '打豆豆', isComplete: true }
+                ],
+                visibility: 'all'
+            },
+            computed: {
+                filterList: function () {
+                    var filter = {
+                        all: function(items) {
+                            return items
+                        },
+                        completed: function(items) {
+                            return items.filter(function (item) {
+                                return item.isComplete
+                            })
+                        },
+                        unCompleted: function(items) {
+                            return items.filter(function (item) {
+                                return !item.isComplete
+                            })
+                        }
+                    }
+                    return filter[ this.visibility](this.items)
+                }
+            },
+            methods: {
+                showAll: function () {
+                    this.visibility = 'all'
+                },
+                showComplete: function() {
+                    this.visibility = 'completed'
+                },
+                showUncomplete: function() {
+                    this.visibility = 'unCompleted'
+                }
+            }
+        })
+    </script>
+</body>
+</html>
