@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Component</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <div id="components-demo">
+        <button-counter></button-counter>
+        <button-counter></button-counter>
+    </div>
+
+    <!-- 通过Prop向子组件传递数据 -->
+    <div id="blog-post-demo">
+        <blog-post title="My journey with Vue"></blog-post>
+        <blog-post title="Blogging with Vue"></blog-post>
+        <blog-post title="Why Vue is so fun"></blog-post>
+
+        <blog-post
+            v-for="post in posts"
+            v-bind:key="post.id"
+            v-bind:title="post.title"
+        ></blog-post>
+    </div>
+
+    <!-- 监听子组件事件 -->
+    <div id="blog-posts-events-demo">
+        <div :style="{ fontSize: postFontSize + 'em' }">
+            <blog-post-event
+                v-for="post in posts"
+                v-bind:key="post.id"
+                v-bind:post="post"
+                v-on:enlarge-text="onEnlargeText"
+            ></blog-post-event>
+        </div>
+    </div>
+
+    <!-- 在组件上使用v-model -->
+    <div id="input-demo">
+        <!-- 下面两者等价 -->
+        <custom-input
+            v-bind:value="searchText"
+            v-on:input="searchText = $event"
+        ></custom-input>
+        <custom-input v-model="searchText"></custom-input>
+        <p>{{searchText}}</p>
+    </div>
+
+    <!-- 通过插槽分发内容 -->
+    <div id="slot-demo">
+        <alert-box>
+            Something bad happened.
+        </alert-box>
+    </div>
+
+    <script type="text/javascript">
+        // 定义一个名为button-counter的新组件
+        Vue.component('button-counter', {
+            data: function () {
+                return {
+                    count: 0
+                }
+            },
+            template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
+        })
+        var c1 = new Vue({
+            el: '#components-demo'
+        })
+
+        Vue.component('blog-post', {
+            props: ['title'],
+            template: '<h3>{{ title }}</h3>'
+        })
+        var c2 = new Vue({
+            el: '#blog-post-demo',
+            data: {
+                posts: [
+                    { id: 1, title: 'HTML' },
+                    { id: 2, title: 'CSS' },
+                    { id: 3, title: 'JavaScript' }
+                ]
+            }
+        })
+
+        Vue.component('blog-post-event', {
+            props: ['post'],
+            template: `
+                <div class="blog-post">
+                    <h3>{{ post.title }}</h3>
+                    <button v-on:click="$emit('enlarge-text', 0.1)">
+                        Enlarge text
+                    </button>
+                    <div v-html="post.content"></div>
+                </div>
+            `
+        })
+        var c3 = new Vue({
+            el: '#blog-posts-events-demo',
+            data: {
+                posts: [
+                    {
+                        id: 1,
+                        title: 'lorem ipsum',
+                        content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique fuga accusantium cum quidem ipsam illo enim ducimus dolores possimus beatae itaque, recusandae officiis quos sed, excepturi accusamus at et in!'
+                    }, {
+                        id: 2,
+                        title: 'lorem ipsum',
+                        content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique fuga accusantium cum quidem ipsam illo enim ducimus dolores possimus beatae itaque, recusandae officiis quos sed, excepturi accusamus at et in!'
+                    }, {
+                        id: 3,
+                        title: 'lorem ipsum',
+                        content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique fuga accusantium cum quidem ipsam illo enim ducimus dolores possimus beatae itaque, recusandae officiis quos sed, excepturi accusamus at et in!'
+                    }
+                ],
+                postFontSize: 1
+            },
+            methods: {
+                onEnlargeText: function(enlargeAmount) {
+                    this.postFontSize += enlargeAmount
+                }
+            },
+        })
+
+        Vue.component('custom-input', {
+            props: ['value'],
+            template: `
+                <input
+                    v-bind:value="value"
+                    v-on:input="$emit('input', $event.target.value)"
+                >
+            `
+        })
+        var c4 = new Vue({
+            el: '#input-demo',
+            data: {
+                searchText: ''
+            }
+        })
+
+        Vue.component('alert-box', {
+            template: `
+                <div class="demo-alert-box">
+                    <strong>Error!</strong>
+                    <slot></slot>
+                </div>
+            `
+        })
+        var c5 = new Vue({
+            el: '#slot-demo'
+        })
+    </script>
+</body>
+</html>
