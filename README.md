@@ -79,3 +79,20 @@ var ComponentA = {
 
 Prop是你可以在组件上注册的一些自定义特性。当一个值传递给一个prop特性时，它就变成了那个组件实例的一个属性。
 数据流是单向的。父组件可以通过Prop向子组件传递数据，但是反过来不行。
+
+### step-4：Vue Router
+
+官网文档：https://router.vuejs.org/zh/
+
+### step-5：Vuex
+
+官方文档：https://vuex.vuejs.org/zh/
+
+Vuex是一个专为Vue.js应用程序开发的状态管理模式。
+
+几个核心概念：
+
+- State
+- Getter
+- Mutation
+- Action
