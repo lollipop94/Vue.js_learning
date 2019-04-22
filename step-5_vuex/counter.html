@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue——计数</title>
+</head>
+<body>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+    <div id="app"></div>
+
+    <script type="text/javascript">
+        var app = new Vue({
+            el: '#app',
+            // state，驱动应用的数据源
+            data () {
+                return {
+                    count: 0
+                }
+            },
+            // view，以声明方式将state映射到视图
+            template: `
+                <div>
+                    <div>你已经点击了 {{ count }} 次。</div>
+                    <button v-on:click="increment">click</button>
+                </div>
+            `,
+            // actions，响应在view上的用户输入导致的状态变化
+            methods: {
+                increment () {
+                    this.count++
+                }
+            }
+        })
+    </script>
+</body>
+</html>
